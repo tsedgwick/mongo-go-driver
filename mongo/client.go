@@ -751,7 +751,7 @@ func (c *Client) ListDatabaseNames(ctx context.Context, filter interface{}, opts
 //
 // Any error returned by the fn callback will be returned without any modifications.
 func WithSession(ctx context.Context, sess Session, fn func(SessionContext) error) error {
-	return fn(contextWithSession(ctx, sess))
+	return fn(ContextWithSession(ctx, sess))
 }
 
 // UseSession creates a new Session and uses it to create a new SessionContext, which is used to call the fn callback.

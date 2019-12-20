@@ -85,7 +85,7 @@ func newChangeStream(ctx context.Context, config changeStreamConfig, pipeline in
 		selector:   description.ReadPrefSelector(config.readPreference),
 	}
 
-	cs.sess = sessionFromContext(ctx)
+	cs.sess = SessionFromContext(ctx)
 	if cs.sess == nil && cs.client.sessionPool != nil {
 		cs.sess, cs.err = session.NewClientSession(cs.client.sessionPool, cs.client.id, session.Implicit)
 		if cs.err != nil {

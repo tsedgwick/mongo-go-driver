@@ -71,7 +71,7 @@ func (iv IndexView) List(ctx context.Context, opts ...*options.ListIndexesOption
 		ctx = context.Background()
 	}
 
-	sess := sessionFromContext(ctx)
+	sess := SessionFromContext(ctx)
 	if sess == nil && iv.coll.client.sessionPool != nil {
 		var err error
 		sess, err = session.NewClientSession(iv.coll.client.sessionPool, iv.coll.client.id, session.Implicit)
@@ -203,7 +203,7 @@ func (iv IndexView) CreateMany(ctx context.Context, models []IndexModel, opts ..
 		return nil, err
 	}
 
-	sess := sessionFromContext(ctx)
+	sess := SessionFromContext(ctx)
 
 	if sess == nil && iv.coll.client.sessionPool != nil {
 		sess, err = session.NewClientSession(iv.coll.client.sessionPool, iv.coll.client.id, session.Implicit)
@@ -335,7 +335,7 @@ func (iv IndexView) drop(ctx context.Context, name string, opts ...*options.Drop
 		ctx = context.Background()
 	}
 
-	sess := sessionFromContext(ctx)
+	sess := SessionFromContext(ctx)
 	if sess == nil && iv.coll.client.sessionPool != nil {
 		var err error
 		sess, err = session.NewClientSession(iv.coll.client.sessionPool, iv.coll.client.id, session.Implicit)

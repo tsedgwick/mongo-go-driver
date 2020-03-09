@@ -27,6 +27,9 @@ type ChangeStreamOptions struct {
 	// the updated document will not be included in the change notification.
 	FullDocument *FullDocument
 
+	// When set to ‘whenAvailable’ or ‘required’ will have both the delta and the full document before the change was applied
+	FullDocumentBeforeChange *FullDocumentBeforeChange
+
 	// The maximum amount of time that the server should wait for new documents to satisfy a tailable cursor query.
 	MaxAwaitTime *time.Duration
 
@@ -79,6 +82,12 @@ func (cso *ChangeStreamOptions) SetMaxAwaitTime(d time.Duration) *ChangeStreamOp
 	return cso
 }
 
+// SetFullDocumentBeforeChange sets the value for the FullDocumentBeforeChange field.
+func (cso *ChangeStreamOptions) SetFullDocumentBeforeChange(fdbc FullDocumentBeforeChange) *ChangeStreamOptions {
+	cso.FullDocumentBeforeChange = &fdbc
+	return cso
+}
+
 // SetResumeAfter sets the value for the ResumeAfter field.
 func (cso *ChangeStreamOptions) SetResumeAfter(rt interface{}) *ChangeStreamOptions {
 	cso.ResumeAfter = rt
@@ -113,6 +122,9 @@ func MergeChangeStreamOptions(opts ...*ChangeStreamOptions) *ChangeStreamOptions
 		}
 		if cso.FullDocument != nil {
 			csOpts.FullDocument = cso.FullDocument
+		}
+		if cso.FullDocumentBeforeChange != nil {
+			csOpts.FullDocumentBeforeChange = cso.FullDocumentBeforeChange
 		}
 		if cso.MaxAwaitTime != nil {
 			csOpts.MaxAwaitTime = cso.MaxAwaitTime

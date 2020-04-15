@@ -20,7 +20,6 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/readconcern"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
 	"go.mongodb.org/mongo-driver/mongo/writeconcern"
-	"go.mongodb.org/mongo-driver/x/bsonx"
 	"go.mongodb.org/mongo-driver/x/bsonx/bsoncore"
 	"go.mongodb.org/mongo-driver/x/mongo/driver"
 	"go.mongodb.org/mongo-driver/x/mongo/driver/auth"
@@ -306,7 +305,7 @@ func (c *Client) endSessions(ctx context.Context) {
 		Database("admin").Crypt(c.crypt)
 
 	totalNumIDs := len(sessionIDs)
-	var currentBatch []bsonx.Doc
+	var currentBatch []bsoncore.Document
 	for i := 0; i < totalNumIDs; i++ {
 		currentBatch = append(currentBatch, sessionIDs[i])
 

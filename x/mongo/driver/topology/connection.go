@@ -48,6 +48,7 @@ type connection struct {
 	config               *connectionConfig
 	cancelConnectContext context.CancelFunc
 	connectContextMade   chan struct{}
+	mu                   sync.Mutex
 
 	// pool related fields
 	pool       *pool
@@ -93,7 +94,17 @@ func (c *connection) connect(ctx context.Context) {
 	}
 	defer close(c.connectDone)
 
+	c.mu.Lock()
 	ctx, c.cancelConnectContext = context.WithCancel(ctx)
+	c.mu.Unlock()
+	defer func() {
+		c.mu.Lock()
+		if c.cancelConnectContext != nil {
+			c.cancelConnectContext()
+			c.cancelConnectContext = nil
+		}
+		c.mu.Unlock()
+	}()
 	close(c.connectContextMade)
 
 	var err error
@@ -185,7 +196,12 @@ func (c *connection) wait() error {
 
 func (c *connection) closeConnectContext() {
 	<-c.connectContextMade
-	c.cancelConnectContext()
+	c.mu.Lock()
+	if c.cancelConnectContext != nil {
+		c.cancelConnectContext()
+		c.cancelConnectContext = nil
+	}
+	c.mu.Unlock()
 }
 
 func (c *connection) writeWireMessage(ctx context.Context, wm []byte) error {

@@ -694,20 +694,17 @@ func (t *Topology) IsConsistent() bool {
 	if len(serversCopy) == 0 || len(serversCopy) == 1 {
 		return true
 	}
-	var foundPrimary bool
+
 	for _, server := range serversCopy {
 		serverDesc := server.Description()
 		switch serverDesc.Kind {
 		case description.RSPrimary:
-			if foundPrimary {
-				return true
-			}
-			foundPrimary = true
+			return false
 		case description.RSSecondary:
 		default:
 			return true
 		}
 	}
 
-	return !foundPrimary
+	return true
 }
